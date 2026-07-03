@@ -292,7 +292,8 @@
             
             // 3. Fetch API
             try {
-                const response = await fetch('/api/chat', {
+                // UPDATE THIS URL to your actual Railway domain once deployed
+                const response = await fetch('https://your-backend-app.up.railway.app/api/chat', {
                     method: 'POST',
                     headers: { 'Content-Type': 'application/json' },
                     body: JSON.stringify({ query })
