@@ -3,8 +3,11 @@ import os
 # pyrefly: ignore [missing-import]
 from fastapi import FastAPI, HTTPException
 # pyrefly: ignore [missing-import]
+from fastapi.staticfiles import StaticFiles
+# pyrefly: ignore [missing-import]
+from fastapi.responses import FileResponse
+# pyrefly: ignore [missing-import]
 from pydantic import BaseModel
-from fastapi.middleware.cors import CORSMiddleware
 
 # Ensure we can import from src
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '../../')))
@@ -13,15 +16,6 @@ from src.rag.intent import classify_intent, get_refusal_message
 from src.rag.engine import ask_question
 
 app = FastAPI(title="HDFC Mutual Fund Assistant API")
-
-# Configure CORS for Vercel Frontend
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=["*"], # In production, replace "*" with your Vercel URL
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 class ChatRequest(BaseModel):
     query: str
@@ -49,9 +43,13 @@ async def chat_endpoint(request: ChatRequest):
     except Exception as e:
         raise HTTPException(status_code=500, detail=str(e))
 
+# Mount static files (the Stitch UI)
+static_dir = os.path.join(os.path.dirname(__file__), "static")
+app.mount("/static", StaticFiles(directory=static_dir), name="static")
+
 @app.get("/")
 async def root():
-    return {"message": "HDFC Mutual Fund Assistant API is running!"}
+    return FileResponse(os.path.join(static_dir, "index.html"))
 
 if __name__ == "__main__":
     # pyrefly: ignore [missing-import]
