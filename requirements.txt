@@ -13,3 +13,4 @@ playwright
 fastapi
 uvicorn
 pydantic
+pysqlite3-binary

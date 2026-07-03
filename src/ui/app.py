@@ -1,5 +1,13 @@
 import sys
 import os
+
+# WORKAROUND FOR CHROMADB ON LINUX CLOUD SERVERS (Railway/Render)
+try:
+    __import__('pysqlite3')
+    sys.modules['sqlite3'] = sys.modules.pop('pysqlite3')
+except ImportError:
+    pass # Locally on Windows, pysqlite3 might not be installed or needed
+
 # pyrefly: ignore [missing-import]
 from fastapi import FastAPI, HTTPException
 # pyrefly: ignore [missing-import]
