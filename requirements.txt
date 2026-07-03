@@ -10,3 +10,6 @@ langchain-groq
 sentence-transformers
 python-dotenv
 playwright
+fastapi
+uvicorn
+pydantic
