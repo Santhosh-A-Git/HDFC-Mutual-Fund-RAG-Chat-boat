@@ -26,13 +26,12 @@ def get_vectorstore():
     global _vectorstore
     if _vectorstore is None:
         persist_directory = os.path.abspath(os.path.join(os.path.dirname(__file__), '../../data/chroma_db'))
-        model_name = "BAAI/bge-large-en"
-        model_kwargs = {'device': 'cpu'}
-        encode_kwargs = {'normalize_embeddings': True}
+        # Initialize Embeddings
+        # Using lightweight BAAI/bge-small-en-v1.5 to fit within Railway's 500MB RAM limit
         hf_embeddings = HuggingFaceBgeEmbeddings(
-            model_name=model_name,
-            model_kwargs=model_kwargs,
-            encode_kwargs=encode_kwargs
+            model_name="BAAI/bge-small-en-v1.5",
+            model_kwargs={'device': 'cpu'},
+            encode_kwargs={'normalize_embeddings': True}
         )
         _vectorstore = Chroma(persist_directory=persist_directory, embedding_function=hf_embeddings)
     return _vectorstore
@@ -108,6 +107,7 @@ def ask_question(query: str):
     # 3. Generate answer
     context_str = format_docs(docs)
     import time
+    # pyrefly: ignore [missing-import]
     from tenacity import retry, stop_after_attempt, wait_exponential, retry_if_exception_type
     
     # Define retry logic: Stop after 4 attempts, wait exponentially between 2 and 10 seconds.

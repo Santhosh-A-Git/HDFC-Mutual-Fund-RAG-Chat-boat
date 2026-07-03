@@ -27,14 +27,11 @@ def clean_text(text):
     return '\n'.join(chunk for chunk in chunks if chunk)
 
 def main():
-    print("Initializing embedding model: BAAI/bge-large-en...")
-    model_name = "BAAI/bge-large-en"
-    model_kwargs = {'device': 'cpu'}
-    encode_kwargs = {'normalize_embeddings': True}
+    print("Initializing embedding model: BAAI/bge-small-en-v1.5...")
     hf_embeddings = HuggingFaceBgeEmbeddings(
-        model_name=model_name,
-        model_kwargs=model_kwargs,
-        encode_kwargs=encode_kwargs
+        model_name="BAAI/bge-small-en-v1.5",
+        model_kwargs={'device': 'cpu'},
+        encode_kwargs={'normalize_embeddings': True}
     )
     
     docs = []
